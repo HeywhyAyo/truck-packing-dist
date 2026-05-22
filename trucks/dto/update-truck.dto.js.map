@@ -1,0 +1,1 @@
+{"version":3,"file":"update-truck.dto.js","sourceRoot":"","sources":["../../../src/trucks/dto/update-truck.dto.ts"],"names":[],"mappings":";;;;;;;;;;;;AACA,yDAAoD;AACpD,6CAA8C;AAC9C,qDAAuD;AAGvD,MAAa,cAAe,SAAQ,iCAAc;IAI5C,EAAE,CAAS;CAChB;AALD,wCAKC;AADK;IAHD,IAAA,qBAAW,EAAC,EAAE,OAAO,EAAE,sCAAsC,EAAE,WAAW,EAAE,mBAAmB,EAAE,CAAC;IAChG,IAAA,0BAAQ,GAAE;IACV,IAAA,4BAAU,GAAE;;0CACF"}
