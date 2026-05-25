@@ -75,7 +75,7 @@ __decorate([
     (0, swagger_1.ApiQuery)({
         name: "search",
         required: false,
-        description: "Search by email",
+        description: "Search by item id or description (case-insensitive, partial match)",
         type: String,
     }),
     (0, swagger_1.ApiOperation)({ summary: 'List all inventory items' }),

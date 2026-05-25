@@ -74,7 +74,7 @@ __decorate([
     (0, swagger_1.ApiQuery)({
         name: "search",
         required: false,
-        description: "Search by email",
+        description: "Search by truck id or description (case-insensitive, partial match)",
         type: String,
     }),
     (0, swagger_1.ApiOperation)({ summary: 'List all trucks' }),
@@ -104,10 +104,10 @@ __decorate([
     (0, swagger_1.ApiQuery)({
         name: "search",
         required: false,
-        description: "Search by email",
+        description: "Search by truck name (case-insensitive, partial match)",
         type: String,
     }),
-    (0, swagger_1.ApiOperation)({ summary: 'List available trucks' }),
+    (0, swagger_1.ApiOperation)({ summary: 'List or search for all available trucks' }),
     (0, swagger_1.ApiOkResponse)({ description: 'Available trucks' }),
     __param(0, (0, common_1.Query)("page")),
     __param(1, (0, common_1.Query)("limit")),
