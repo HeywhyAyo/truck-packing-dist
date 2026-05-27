@@ -42,7 +42,7 @@ let ItemsService = class ItemsService {
                 const apiResponse = (0, apiResponse_1.createUnSuccessfulResponse)('Profit must be a positive number');
                 throw new common_1.HttpException(apiResponse, common_1.HttpStatus.BAD_REQUEST);
             }
-            const exixtItem = await this.findOne(dto.itemId);
+            const exixtItem = await this.findOneItemByItemId(dto.itemId);
             if (exixtItem) {
                 const apiResponse = (0, apiResponse_1.createUnSuccessfulResponse)(`Item with ID ${dto.itemId} already exist`);
                 throw new common_1.HttpException(apiResponse, common_1.HttpStatus.BAD_REQUEST);
@@ -107,8 +107,18 @@ let ItemsService = class ItemsService {
     }
     async findOne(id) {
         const item = await this.itemRepo.findOne({ where: { id } });
-        if (!item)
-            throw new common_1.NotFoundException(`Item #${id} not found`);
+        if (!item) {
+            const apiResponse = (0, apiResponse_1.createUnSuccessfulResponse)(`Item #${id} not found`);
+            throw new common_1.HttpException(apiResponse, common_1.HttpStatus.BAD_REQUEST);
+        }
+        return item;
+    }
+    async findOneItemByItemId(itemId) {
+        const item = await this.itemRepo.findOne({ where: { itemId } });
+        if (!item) {
+            const apiResponse = (0, apiResponse_1.createUnSuccessfulResponse)(`Item with Item Id #${itemId} not found`);
+            throw new common_1.HttpException(apiResponse, common_1.HttpStatus.BAD_REQUEST);
+        }
         return item;
     }
     async findsingleItem(id) {

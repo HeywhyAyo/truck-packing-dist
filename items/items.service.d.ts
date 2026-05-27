@@ -15,6 +15,7 @@ export declare class ItemsService {
     findInStock(): Promise<Item[]>;
     findItemInStock(): Promise<import("../shared/interfaces/aResponse").aResponse<Item[]> | undefined>;
     findOne(id: string): Promise<Item>;
+    findOneItemByItemId(itemId: string): Promise<Item>;
     findsingleItem(id: string): Promise<import("../shared/interfaces/aResponse").aResponse<Item> | undefined>;
     update(id: string, dto: UpdateItemDto): Promise<Item>;
     update_Single_Item(id: string, dto: UpdateItemDto): Promise<import("../shared/interfaces/aResponse").aResponse<Item> | undefined>;

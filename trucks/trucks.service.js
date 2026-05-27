@@ -43,7 +43,7 @@ let TrucksService = class TrucksService {
                 const apiResponse = (0, apiResponse_1.createUnSuccessfulResponse)('Truck name is required and cannot be empty');
                 throw new common_1.HttpException(apiResponse, common_1.HttpStatus.BAD_REQUEST);
             }
-            const identicalTrck = await this.findOne(dto.registrationNumber);
+            const identicalTrck = await this.findTruckByRegNo(dto.registrationNumber);
             if (identicalTrck) {
                 const apiResponse = (0, apiResponse_1.createUnSuccessfulResponse)(`Truck with this ${dto.registrationNumber} already exist`);
                 throw new common_1.HttpException(apiResponse, common_1.HttpStatus.BAD_REQUEST);
@@ -109,6 +109,12 @@ let TrucksService = class TrucksService {
         const truck = await this.truckRepo.findOne({ where: { id } });
         if (!truck)
             throw new common_1.HttpException((0, apiResponse_1.createUnSuccessfulResponse)(`Truck #${id} not found`), common_1.HttpStatus.BAD_REQUEST);
+        return truck;
+    }
+    async findTruckByRegNo(regno) {
+        const truck = await this.truckRepo.findOne({ where: { registrationNumber: regno } });
+        if (!truck)
+            throw new common_1.HttpException((0, apiResponse_1.createUnSuccessfulResponse)(`Truck #${regno} not found`), common_1.HttpStatus.BAD_REQUEST);
         return truck;
     }
     async findOneById(id) {
