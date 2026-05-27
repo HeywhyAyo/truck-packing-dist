@@ -43,6 +43,15 @@ let TrucksService = class TrucksService {
                 const apiResponse = (0, apiResponse_1.createUnSuccessfulResponse)('Truck name is required and cannot be empty');
                 throw new common_1.HttpException(apiResponse, common_1.HttpStatus.BAD_REQUEST);
             }
+            const identicalTrck = await this.findOne(dto.registrationNumber);
+            if (identicalTrck) {
+                const apiResponse = (0, apiResponse_1.createUnSuccessfulResponse)(`Truck with this ${dto.registrationNumber} already exist`);
+                throw new common_1.HttpException(apiResponse, common_1.HttpStatus.BAD_REQUEST);
+            }
+            if (!dto.name || dto.name.trim() === '') {
+                const apiResponse = (0, apiResponse_1.createUnSuccessfulResponse)('Truck name is required and cannot be empty');
+                throw new common_1.HttpException(apiResponse, common_1.HttpStatus.BAD_REQUEST);
+            }
             const truck = await this.create(dto);
             return (0, apiResponse_1.createResponse)(true, 'Truck created successfully', truck.id);
         }
@@ -161,9 +170,9 @@ let TrucksService = class TrucksService {
         if (existing > 0)
             return this.findseedAll();
         const seeds = [
-            { name: 'Suzuki Supercarry', type: 'Small Truck', maxLoadWeight: 740 },
-            { name: 'Ford Transit', type: 'Medium Truck', maxLoadWeight: 1500 },
-            { name: 'MAN TGX', type: 'Large Truck', maxLoadWeight: 22000 },
+            { name: 'Suzuki Supercarry', registrationNumber: "Trsdysvdf", type: 'Small Truck', maxLoadWeight: 740 },
+            { name: 'Ford Transit', registrationNumber: "ffvjdfvjdfvj", type: 'Medium Truck', maxLoadWeight: 1500 },
+            { name: 'MAN TGX', registrationNumber: "Trsdyssgvdfvdg", type: 'Large Truck', maxLoadWeight: 22000 },
         ];
         const trucks = this.truckRepo.create(seeds);
         return this.truckRepo.save(trucks);

@@ -42,6 +42,11 @@ let ItemsService = class ItemsService {
                 const apiResponse = (0, apiResponse_1.createUnSuccessfulResponse)('Profit must be a positive number');
                 throw new common_1.HttpException(apiResponse, common_1.HttpStatus.BAD_REQUEST);
             }
+            const exixtItem = await this.findOne(dto.itemId);
+            if (exixtItem) {
+                const apiResponse = (0, apiResponse_1.createUnSuccessfulResponse)(`Item with ID ${dto.itemId} already exist`);
+                throw new common_1.HttpException(apiResponse, common_1.HttpStatus.BAD_REQUEST);
+            }
             const item = await this.create(dto);
             return (0, apiResponse_1.createResponse)(true, 'Item created successfully', item.id);
         }

@@ -39,8 +39,7 @@ __decorate([
     __metadata("design:type", Number)
 ], CreateTruckDto.prototype, "maxLoadWeight", void 0);
 __decorate([
-    (0, swagger_1.ApiPropertyOptional)({ example: 'AB12 CDE', description: 'Optional registration number' }),
-    (0, class_validator_1.IsOptional)(),
+    (0, swagger_1.ApiProperty)({ example: 'AB12 CDE', description: 'Optional registration number' }),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateTruckDto.prototype, "registrationNumber", void 0);

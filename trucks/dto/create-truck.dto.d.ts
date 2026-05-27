@@ -3,6 +3,6 @@ export declare class CreateTruckDto {
     name: string;
     type: TruckType;
     maxLoadWeight: number;
-    registrationNumber?: string;
+    registrationNumber: string;
     isAvailable?: boolean;
 }

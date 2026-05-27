@@ -40,7 +40,7 @@ __decorate([
     __metadata("design:type", Number)
 ], Truck.prototype, "maxLoadWeight", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ length: 20, nullable: true }),
+    (0, typeorm_1.Column)({ length: 20, unique: true, nullable: true }),
     __metadata("design:type", String)
 ], Truck.prototype, "registrationNumber", void 0);
 __decorate([
