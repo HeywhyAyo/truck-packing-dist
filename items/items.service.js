@@ -115,10 +115,6 @@ let ItemsService = class ItemsService {
     }
     async findOneItemByItemId(itemId) {
         const item = await this.itemRepo.findOne({ where: { itemId } });
-        if (!item) {
-            const apiResponse = (0, apiResponse_1.createUnSuccessfulResponse)(`Item with Item Id #${itemId} not found`);
-            throw new common_1.HttpException(apiResponse, common_1.HttpStatus.BAD_REQUEST);
-        }
         return item;
     }
     async findsingleItem(id) {
