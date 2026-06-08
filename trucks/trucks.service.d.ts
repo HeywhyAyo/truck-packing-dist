@@ -12,7 +12,7 @@ export declare class TrucksService {
     findseedAll(): Promise<Truck[]>;
     findAvailable(page?: number, limit?: number, search?: string): Promise<PaginatedResult<Truck>>;
     findOne(id: string): Promise<Truck>;
-    findTruckByRegNo(regno: string): Promise<Truck>;
+    findTruckByRegNo(regno: string): Promise<Truck | null>;
     findOneById(id: string): Promise<import("../shared/interfaces/aResponse").aResponse<Truck> | undefined>;
     findAllTrucks(page?: number, limit?: number, search?: string): Promise<import("../shared/interfaces/aResponse").aResponse<PaginatedResult<Truck>> | undefined>;
     findAvailableTruck(page?: number, limit?: number, search?: string): Promise<import("../shared/interfaces/aResponse").aResponse<PaginatedResult<Truck>> | undefined>;

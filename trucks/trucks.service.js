@@ -113,8 +113,6 @@ let TrucksService = class TrucksService {
     }
     async findTruckByRegNo(regno) {
         const truck = await this.truckRepo.findOne({ where: { registrationNumber: regno } });
-        if (!truck)
-            throw new common_1.HttpException((0, apiResponse_1.createUnSuccessfulResponse)(`Truck #${regno} not found`), common_1.HttpStatus.BAD_REQUEST);
         return truck;
     }
     async findOneById(id) {

@@ -7,7 +7,7 @@ async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.enableCors();
     const config = new swagger_1.DocumentBuilder()
-        .setTitle("Group 2 Truck Loading API")
+        .setTitle("Group 2 Truck Loading API.")
         .setDescription("Truck loading optimisation backend and inventory management API")
         .setVersion("1.0")
         .addTag('trucks')
