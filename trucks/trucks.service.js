@@ -84,6 +84,9 @@ let TrucksService = class TrucksService {
     findseedAll() {
         return this.truckRepo.find();
     }
+    async findAvailableNoPagination() {
+        return this.truckRepo.find({ where: { isAvailable: true } });
+    }
     async findAvailable(page = 1, limit = 10, search) {
         const skip = (page - 1) * limit;
         const whereCondition = search

@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.OptimiseLoadDto = void 0;
+exports.OptimiseMultipleLoadsDto = exports.OptimiseLoadDto = void 0;
 const class_validator_1 = require("class-validator");
 const swagger_1 = require("@nestjs/swagger");
 class OptimiseLoadDto {
@@ -36,4 +36,32 @@ __decorate([
     (0, class_validator_1.Min)(1),
     __metadata("design:type", Number)
 ], OptimiseLoadDto.prototype, "capacityOverrideKg", void 0);
+class OptimiseMultipleLoadsDto {
+    truckIds;
+    itemIds;
+}
+exports.OptimiseMultipleLoadsDto = OptimiseMultipleLoadsDto;
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({
+        example: ['ba5b36a6-1951-41e3-afe2-f347092be92f', 'c2a1f8e0-3b4d-4e5f-9a6b-7c8d9e0f1a2b'],
+        description: 'List of truck IDs to load. If omitted, all available trucks in the fleet are used.',
+        type: [String],
+    }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.ArrayNotEmpty)(),
+    (0, class_validator_1.IsString)({ each: true }),
+    __metadata("design:type", Array)
+], OptimiseMultipleLoadsDto.prototype, "truckIds", void 0);
+__decorate([
+    (0, swagger_1.ApiPropertyOptional)({
+        example: ['I1', 'I2', 'I3', 'I4'],
+        description: 'List of item IDs to consider for loading. If omitted, all in-stock items in the depot are used.',
+        type: [String],
+    }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsArray)(),
+    (0, class_validator_1.IsString)({ each: true }),
+    __metadata("design:type", Array)
+], OptimiseMultipleLoadsDto.prototype, "itemIds", void 0);
 //# sourceMappingURL=optimise-load.dto.js.map

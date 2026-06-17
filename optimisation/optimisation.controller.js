@@ -19,6 +19,8 @@ const items_service_1 = require("../items/items.service");
 const trucks_service_1 = require("../trucks/trucks.service");
 const optimise_load_dto_1 = require("./dto/optimise-load.dto");
 const optimisation_service_1 = require("./optimisation.service");
+const rethrow_exception_1 = require("../shared/utilities/rethrow-exception");
+const apiResponse_1 = require("../shared/utilities/apiResponse");
 let OptimisationController = class OptimisationController {
     optimisationService;
     trucksService;
@@ -30,6 +32,47 @@ let OptimisationController = class OptimisationController {
     }
     async optimiseLoad(dto) {
         return this.optimisationService.system_Optimise(dto);
+    }
+    async optimiseMultipleLoads(dto) {
+        try {
+            let trucks;
+            if (dto.truckIds?.length) {
+                trucks = await Promise.all(dto.truckIds.map((id) => this.trucksService.findOne(id)));
+                const unavailable = trucks.filter((t) => !t.isAvailable);
+                if (unavailable.length) {
+                    const apiResponse = (0, apiResponse_1.createUnSuccessfulResponse)(`These trucks are not available: ${unavailable.map((t) => t.name).join(', ')}`);
+                    throw new common_1.HttpException(apiResponse, common_1.HttpStatus.BAD_REQUEST);
+                }
+            }
+            else {
+                trucks = await this.trucksService.findAvailableNoPagination();
+            }
+            if (trucks.length === 0) {
+                throw new common_1.HttpException((0, apiResponse_1.createUnSuccessfulResponse)('No available trucks to load'), common_1.HttpStatus.BAD_REQUEST);
+            }
+            let items;
+            if (dto.itemIds?.length) {
+                items = await this.itemsService.findByItemIds(dto.itemIds);
+                if (items.length === 0) {
+                    throw new common_1.HttpException((0, apiResponse_1.createUnSuccessfulResponse)(`None of the provided itemIds were found: ${dto.itemIds.join(', ')}`), common_1.HttpStatus.BAD_REQUEST);
+                }
+            }
+            else {
+                items = await this.itemsService.findInStock();
+            }
+            if (items.length === 0) {
+                const apiResponse = (0, apiResponse_1.createUnSuccessfulResponse)('No items available to optimise');
+                throw new common_1.HttpException(apiResponse, common_1.HttpStatus.BAD_REQUEST);
+            }
+            const result = this.optimisationService.multiTruckOptimise(trucks, items);
+            return (0, apiResponse_1.createResponse)(true, 'Multi-truck optimisation completed successfully', result);
+        }
+        catch (error) {
+            (0, rethrow_exception_1.rethrowIfHttpException)(error);
+        }
+    }
+    async loadFleet() {
+        return this.optimiseMultipleLoads({});
     }
     async quickLoad(truckId) {
         return await this.optimiseLoad({ truckId });
@@ -62,6 +105,19 @@ __decorate([
     __metadata("design:paramtypes", [optimise_load_dto_1.OptimiseLoadDto]),
     __metadata("design:returntype", Promise)
 ], OptimisationController.prototype, "optimiseLoad", null);
+__decorate([
+    (0, common_1.Post)('load-multiple'),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [optimise_load_dto_1.OptimiseMultipleLoadsDto]),
+    __metadata("design:returntype", Promise)
+], OptimisationController.prototype, "optimiseMultipleLoads", null);
+__decorate([
+    (0, common_1.Get)('load-fleet'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], OptimisationController.prototype, "loadFleet", null);
 __decorate([
     (0, common_1.Get)('load/:truckId'),
     (0, swagger_1.ApiOperation)({ summary: 'Optimise load for a truck using all in-stock items' }),

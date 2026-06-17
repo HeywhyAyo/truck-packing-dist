@@ -76,6 +76,46 @@ let OptimisationService = OptimisationService_1 = class OptimisationService {
             (0, rethrow_exception_1.rethrowIfHttpException)(error);
         }
     }
+    multiTruckOptimise(trucks, items) {
+        const sortedTrucks = [...trucks].sort((a, b) => b.maxLoadWeight - a.maxLoadWeight);
+        let pool = [...items];
+        const truckPlans = [];
+        for (const truck of sortedTrucks) {
+            if (pool.length === 0) {
+                truckPlans.push({
+                    truck,
+                    selectedItems: [],
+                    totalProfit: 0,
+                    totalWeight: 0,
+                    remainingCapacity: truck.maxLoadWeight,
+                    truckCapacity: truck.maxLoadWeight,
+                    efficiency: 0,
+                });
+                continue;
+            }
+            const single = this.optimise(pool, truck.maxLoadWeight);
+            truckPlans.push({
+                truck,
+                selectedItems: single.selectedItems,
+                totalProfit: single.totalProfit,
+                totalWeight: single.totalWeight,
+                remainingCapacity: single.remainingCapacity,
+                truckCapacity: truck.maxLoadWeight,
+                efficiency: single.efficiency,
+            });
+            const loadedIds = new Set(single.selectedItems.map((i) => i.id));
+            pool = pool.filter((i) => !loadedIds.has(i.id));
+        }
+        return {
+            truckPlans,
+            grandTotalProfit: truckPlans.reduce((s, p) => s + p.totalProfit, 0),
+            grandTotalWeight: truckPlans.reduce((s, p) => s + p.totalWeight, 0),
+            totalItemsLoaded: truckPlans.reduce((s, p) => s + p.selectedItems.length, 0),
+            unallocatedItems: pool,
+            algorithmUsed: 'dynamic-programming',
+            calculatedAt: new Date().toISOString(),
+        };
+    }
     dynamic_programming_worker(items, scaledWeights, scaledCapacity) {
         const n = items.length;
         const W = scaledCapacity;
@@ -101,85 +141,6 @@ let OptimisationService = OptimisationService_1 = class OptimisationService {
             }
         }
         return selected;
-    }
-    solveBranchAndBound(items, capacityKg) {
-        const sorted = [...items].sort((a, b) => b.profit / b.weight - a.profit / a.weight);
-        const n = sorted.length;
-        let bestProfit = 0;
-        let bestTaken = new Array(n).fill(false);
-        const queue = [];
-        const root = {
-            level: -1,
-            profit: 0,
-            weight: 0,
-            upperBound: this.lpUpperBound(sorted, 0, 0, capacityKg),
-            taken: [],
-        };
-        queue.push(root);
-        while (queue.length > 0) {
-            queue.sort((a, b) => b.upperBound - a.upperBound);
-            const node = queue.shift();
-            if (node.upperBound <= bestProfit)
-                continue;
-            const nextLevel = node.level + 1;
-            if (nextLevel >= n)
-                continue;
-            const item = sorted[nextLevel];
-            const newWeight = node.weight + item.weight;
-            if (newWeight <= capacityKg) {
-                const newProfit = node.profit + item.profit;
-                const newTaken = [...node.taken, true];
-                if (newProfit > bestProfit) {
-                    bestProfit = newProfit;
-                    bestTaken = this.expandTaken(newTaken, n);
-                }
-                const ub = this.lpUpperBound(sorted, nextLevel + 1, newWeight, capacityKg) + newProfit;
-                if (ub > bestProfit) {
-                    queue.push({
-                        level: nextLevel,
-                        profit: newProfit,
-                        weight: newWeight,
-                        upperBound: ub,
-                        taken: newTaken,
-                    });
-                }
-            }
-            const excludeTaken = [...node.taken, false];
-            const ubExclude = this.lpUpperBound(sorted, nextLevel + 1, node.weight, capacityKg) + node.profit;
-            if (ubExclude > bestProfit) {
-                queue.push({
-                    level: nextLevel,
-                    profit: node.profit,
-                    weight: node.weight,
-                    upperBound: ubExclude,
-                    taken: excludeTaken,
-                });
-            }
-        }
-        return sorted.filter((_, idx) => bestTaken[idx]);
-    }
-    lpUpperBound(sorted, startIndex, currentWeight, capacity) {
-        let remainingCap = capacity - currentWeight;
-        let bound = 0;
-        for (let i = startIndex; i < sorted.length; i++) {
-            if (remainingCap <= 0)
-                break;
-            const item = sorted[i];
-            if (item.weight <= remainingCap) {
-                bound += item.profit;
-                remainingCap -= item.weight;
-            }
-            else {
-                bound += (remainingCap / item.weight) * item.profit;
-                break;
-            }
-        }
-        return bound;
-    }
-    expandTaken(partial, n) {
-        const full = new Array(n).fill(false);
-        partial.forEach((v, i) => (full[i] = v));
-        return full;
     }
     gcd(a, b) {
         return b === 0 ? a : this.gcd(b, a % b);

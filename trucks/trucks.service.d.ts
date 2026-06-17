@@ -10,6 +10,7 @@ export declare class TrucksService {
     create_truck(dto: CreateTruckDto): Promise<import("../shared/interfaces/aResponse").aResponse<string> | undefined>;
     findAll(page?: number, limit?: number, search?: string): Promise<PaginatedResult<Truck>>;
     findseedAll(): Promise<Truck[]>;
+    findAvailableNoPagination(): Promise<Truck[]>;
     findAvailable(page?: number, limit?: number, search?: string): Promise<PaginatedResult<Truck>>;
     findOne(id: string): Promise<Truck>;
     findTruckByRegNo(regno: string): Promise<Truck | null>;

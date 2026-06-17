@@ -3,3 +3,7 @@ export declare class OptimiseLoadDto {
     itemIds?: string[];
     capacityOverrideKg?: number;
 }
+export declare class OptimiseMultipleLoadsDto {
+    truckIds?: string[];
+    itemIds?: string[];
+}
